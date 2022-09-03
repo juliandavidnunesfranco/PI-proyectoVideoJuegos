@@ -1,9 +1,12 @@
 require('dotenv').config();
+const axios = require('axios');
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
+
+
 const {
-  DB_USER, DB_PASSWORD, DB_HOST,
+  DB_USER, DB_PASSWORD, DB_HOST, API_KEY
 } = process.env;
 
 const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/videogames`, {
@@ -21,7 +24,7 @@ fs.readdirSync(path.join(__dirname, '/models'))
     modelDefiners.push(require(path.join(__dirname, '/models', file)));
   });
 
-// Injectamos la conexion (sequelize) a todos los modelos
+// Injectamos la conexion (sequelize) a todos los modelos   ////------>>>sincronizacion db to sequelize
 modelDefiners.forEach(model => model(sequelize));
 // Capitalizamos los nombres de los modelos ie: product => Product
 let entries = Object.entries(sequelize.models);
@@ -30,10 +33,36 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Videogame } = sequelize.models;
+const { Videogame, Genre } = sequelize.models;
 
 // Aca vendrian las relaciones
-// Product.hasMany(Reviews); ***********
+// Product.hasMany(Reviews);     muchos a muchos
+
+Videogame.belongsToMany(Genre, {through: "videogame_genre"});
+Genre.belongsToMany(Videogame, {through: "videogame_genre"});
+
+////  axios --> se usa para cargar los genres a DB  ////
+/* let urlGenre = `https://api.rawg.io/api/genres?key=${API_KEY}`
+
+const getInfoGenre = async () => {
+  let genres;
+  try {
+    await axios.get(urlGenre)
+    .then(response => genres = response.data.results.map((q) => q.name))
+    genres.forEach(e => {
+      Genre.findOrCreate({
+        where: {
+          name: e
+        }
+      });
+    });
+    console.log('Loaded the DB of genre')
+  } catch (e) {
+    console.log(e);
+  };
+};
+getInfoGenre();  ///alimento la DB  de los genres
+ */
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
