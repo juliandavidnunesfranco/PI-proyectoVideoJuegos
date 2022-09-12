@@ -3,11 +3,12 @@ import { NavLink } from 'react-router-dom';
 import videogame from '../assets/videogame.png';
 import './Cards.css';
 
-const Cards = ({id, name, image, genres, createdInDb, rating}) => {
+const Cards = ({id, name, image, genres, createdInDB, rating}) => {
+  console.log(image)
+
   return (
-    <div className='Card'>
-      <div className='Card1'>
-        <NavLink className='all' to={`/videogames/${id}`}>
+    <div className='Card  center'>
+        <NavLink className='all width-100' to={`/videogames/${id}`}>
           <img
             className='img'
             src={/(https?:\/\/.*\.(?:png|jpg))/i.test(image) ? image : videogame }  //imagen proyecto
@@ -20,7 +21,7 @@ const Cards = ({id, name, image, genres, createdInDb, rating}) => {
             <h3>{rating}</h3>
             <h3>Genres:</h3>
           </div>         
-            {!createdInDb? (      //evalua la api
+            {!createdInDB? (      //evalua la api
               <div className='Card4'>
                 {genres?.map((e, t)=>{
                   return(
@@ -42,7 +43,6 @@ const Cards = ({id, name, image, genres, createdInDb, rating}) => {
               </div>
             )}
         </NavLink>
-      </div>
     </div>
       
 

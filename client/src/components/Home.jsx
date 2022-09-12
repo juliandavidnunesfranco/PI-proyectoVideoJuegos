@@ -158,25 +158,19 @@ const Home = (props) => {
                 onClick={()=> history.push('/create')}
                 >Crear videogame
         </button>
-            
                 {currentVideoItems?.map((e) => {        //si el paginado cargo algo entonces
                     return(                         //retorne un componente que tiene como propiedades
-                        <div className='Card'>
-                            <Cards                  //lo siguiente id, name, image ...
-                                id={e.id}           //pero aun no lo rederiza solo esta capturando estas props del dom
-                                name={e.name}
-                                image={e.img}
-                                genres={e.genres}
-                                createdInDb={e.createdInDb}
-                                rating={e.rating}
-                            />
-                        </div>
+                        <Cards                  //lo siguiente id, name, image ...
+                            id={e.id}           //pero aun no lo rederiza solo esta capturando estas props del dom
+                            name={e.name}
+                            image={e.image}
+                            genres={e.genres}
+                            createdInDB={e.createdInDB}
+                            rating={e.rating}
+                            key={e.id}
+                        />
                     )
                 })}
-            
-        
-              
-        
         
         </React.Fragment>
 

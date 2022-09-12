@@ -70,7 +70,7 @@ const getAllVideogames = async () => {
             rating: el.rating,
             platforms: el.platforms.map(ch => ch),
             genres: el.genres.map(ch => ch.name),
-            createdInDB : el.createdInDB
+            createdInDB: el.createdInDB || false,
         }
     })
     let infoTotal = apiInfo.concat(dbInfo);  //  se concatenan los vidogames del api con los de db interna
@@ -135,7 +135,7 @@ router.get('/videogames', async(req, res) => {
                 rating: el.rating,
                 platforms: el.platforms.map(ch => ch.platform.name),
                 genres: el.genres.map(ch => ch.name),
-                    
+                createdInDB: el.createdInDB,
             }
         })
         let gamesFromDB = await Videogame.findAll({
@@ -174,7 +174,8 @@ router.post('/videogames', async (req, res) => {
             release,
             rating,
             platforms,
-            genres   
+            genres,
+            createdInDB
         } = req.body;
         
         let gameCreated = await Videogame.create({
@@ -183,7 +184,8 @@ router.post('/videogames', async (req, res) => {
             image, //options
             release,
             rating,
-            platforms
+            platforms,
+            createdInDB
         })
         let genreDb = await Genre.findAll({
             where: {name: genres}

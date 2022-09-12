@@ -87,10 +87,11 @@
 }
 
 .Card{
-    
-    display: flex;
-    flex-wrap: row wrap;
     margin-top: 100px;
+    width: 300px;
+    float: left;
+    height: 500px;
+    margin-bottom: 30px;
 }
 
 

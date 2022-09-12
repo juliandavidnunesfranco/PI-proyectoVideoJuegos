@@ -66,9 +66,9 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
                 payload === "All"
                 ? stateGenre
                 : stateGenre.filter((e) => {
-                                            if (!e.createdInDb) {
+                                            if (!e.createdInDB) {
                                                 if (e.genres.some((e) => e === payload)) {  return e;  }
-                                            } else if (e.createdInDb) {
+                                            } else if (e.createdInDB) {
                                                 if (e.genres.some((e) => e.name === payload)) {
                                                         return e;
                                                     }
@@ -86,12 +86,12 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
             let stateUno = state.allVideogames;
             let videogameCreated;
             if (payload === "Created") {
-                videogameCreated = stateUno.filter((e) => e.createdInDb);  //se trae del modelo
-                videogameCreated.length === 0
-            ? alert("videogame not created")
-            : console.log("ok found!!");
+                console.log(stateUno);
+                videogameCreated = stateUno.filter((e) => e.createdInDB);  //se trae del modelo
+
+                videogameCreated.length === 0 ? alert("videogame not created") : console.log("ok found!!");
             } else if (payload === "api") {
-                videogameCreated = stateUno.filter((e) => !e.createdInDb);
+                videogameCreated = stateUno.filter((e) => !e.createdInDB);
             } else {
                 videogameCreated = stateUno;
             }return {

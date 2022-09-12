@@ -15,7 +15,7 @@ const Pagination = ({ videogamesPerPage, allVideogames, pagination }) => {
           </p>
           {numeroPag?.map((number) => (
             <li className='items' key={number}>
-              <button className='a'  onClick={() => pagination(number)}>
+              <button className='a'  onClick={(event) => pagination(event, number)}>
                 {number}
               </button>
             </li>
