@@ -42,6 +42,7 @@ export const getVideogames = () => {
     };
 };
 
+
 //esta funcion tambien llama al back-end en la ruta .../genres donde se traen todos 
 export const getGenres = () => {
     return async (dispatch) => {
@@ -160,3 +161,8 @@ export function orderByRating(payload){
         payload,
     }
 };
+
+
+
+
+

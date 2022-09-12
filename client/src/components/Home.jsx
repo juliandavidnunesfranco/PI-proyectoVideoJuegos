@@ -1,16 +1,22 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { filterGamesByGender, filterCreated, orderByName, orderByRating, getVideogames, clearVideogameDetail, clearGenreDetail } from "../actions"
+import { withRouter } from 'react-router-dom';
+import { filterGamesByGender, filterCreated, orderByName, orderByRating, getVideogames, clearVideogameDetail, clearGenreDetail, getGenres } from "../actions"
 import Pagination from './Pagination';
-import './Home.css'
 import SearchBar from './SearchBar';
+import Cards from './Cards'
+import './Home.css'
 
-const Home = () => {
+
+
+const Home = (props) => {
     const dispatch = useDispatch();
     const allVideogames = useSelector((state) => state.videogames);
     //console.log(allVideogames);  estado-->>reducer
-
+    
+    //-------->>>>>Boton de Navegacion
+    const { history } = props;    //propiedad del dom
 
     //-------->>>>>Paginado
 
@@ -35,20 +41,13 @@ const Home = () => {
         setCurrentPage(page);
     }
 
-    /* const renderizaPag = pages.map(page =>(
-        <p key={page}>
-            <button 
-            onClick={e =>paginado(e, page)}
-            >{page}</button>
-        </p>
-    )) */
 
     //------->>>>>>Cargo los videogames con useEffect
-        /* 
-        useEffect(() => {
+        
+      /*   useEffect(() => {
             dispatch(getVideogames());
         }, [dispatch]);
-         */
+       */
 
     //-------->>>>Handlers
 
@@ -57,6 +56,12 @@ const Home = () => {
         dispatch(clearVideogameDetail(dispatch));
         dispatch(getVideogames());
     };
+
+    const handleGenres = (e)=>{
+        e.preventDefault();
+        dispatch(clearVideogameDetail(dispatch));
+        dispatch(getGenres());
+    }
 
     const handleFilterByGenre = (e) => {
         dispatch(clearGenreDetail(dispatch));
@@ -87,8 +92,10 @@ const Home = () => {
 
     
     return(
-        <><nav>
+        <React.Fragment>
+        <nav>
             <button className='button' onClick={handleClick}>Cargar videogames</button>
+            <button className='button-genre' onClick={handleGenres}>Cargar Generos</button>
             <div className='cuadroUno'>
                 <h3>Orden Alfabetico</h3>
                 <select className="selects" onChange={e => handleSortAlfabetica(e)}>
@@ -140,14 +147,40 @@ const Home = () => {
                 <Pagination
                     videogamesPerPage={videogamesPerPage}
                     allVideogames={allVideogames.length}
-                    pagination={paginado} />
+                    pagination={paginado} 
+                />
             </div>
-        </nav>
+        </nav>          
         <div>
-            <SearchBar />
-        </div></>
+            <SearchBar />               
+        </div>
+        <button className='button-createv'
+                onClick={()=> history.push('/create')}
+                >Crear videogame
+        </button>
+            
+                {currentVideoItems?.map((e) => {        //si el paginado cargo algo entonces
+                    return(                         //retorne un componente que tiene como propiedades
+                        <div className='Card'>
+                            <Cards                  //lo siguiente id, name, image ...
+                                id={e.id}           //pero aun no lo rederiza solo esta capturando estas props del dom
+                                name={e.name}
+                                image={e.img}
+                                genres={e.genres}
+                                createdInDb={e.createdInDb}
+                                rating={e.rating}
+                            />
+                        </div>
+                    )
+                })}
+            
+        
+              
+        
+        
+        </React.Fragment>
 
     )  
 };
 
-export default Home;
+export default withRouter(Home);

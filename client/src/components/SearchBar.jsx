@@ -10,19 +10,19 @@ const SearchBar = () => {
   const dispatch = useDispatch();    
   const [name, setName] = useState('');      //estado name
 
-    const handleInputChange = (e) =>{
+    const handleInputChange = (e) =>{     //onChange={e => setName(e.target.value)} dentro del html
         e.preventDefault()
         setName(e.target.value)       //setea el estado por el escrito en barra    
         //console.log(name)           
     }
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = (e) =>{            //onSubmit={}
         e.preventDefault()
         dispatch(clearVideogameDetail(dispatch))  //evaluar
         dispatch(getByNameVideogame(name))   //cuando da enter despacha la function que lo busca
         setName("");
     }
-
+    
     return (
         <div className="search">
             
@@ -42,6 +42,8 @@ const SearchBar = () => {
             {/* <Link to='/createVideogame'>
                 <button>Crear Videojuego</button>
             </Link> */}
+
+            
         </div>
     )
 }

@@ -41,8 +41,9 @@ const { Videogame, Genre } = sequelize.models;
 Videogame.belongsToMany(Genre, {through: "videogame_genre"});
 Genre.belongsToMany(Videogame, {through: "videogame_genre"});
 
+
 ////  axios --> se usa para cargar los genres a DB  ////
-/* let urlGenre = `https://api.rawg.io/api/genres?key=${API_KEY}`
+/* let urlGenre =`https://api.rawg.io/api/genres?key=${API_KEY}`
 
 const getInfoGenre = async () => {
   let genres;
@@ -63,6 +64,7 @@ const getInfoGenre = async () => {
 };
 getInfoGenre();  ///alimento la DB  de los genres
  */
+
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
