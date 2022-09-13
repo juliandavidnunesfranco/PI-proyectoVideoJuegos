@@ -26,7 +26,7 @@ module.exports = (sequelize) => {
     },
     release: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     rating: {
       type: DataTypes.FLOAT,

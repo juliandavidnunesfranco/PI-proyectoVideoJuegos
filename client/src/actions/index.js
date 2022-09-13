@@ -13,6 +13,7 @@ export const POST_VIDEOGAME = 'POST_VIDEOGAME';
 export const ORDER_BY_RATING = 'ORDER_BY_RATING';
 export const CLEAR_DETAIL_GENRE = 'CLEAR_DETAIL_GENRE';
 export const CLEAN_VIDEOGAMES = 'CLEAN_VIDEOGAMES';
+export const GET_ALL_PLATFORMS = "GET_ALL_PLATFORMS";
 //
 
 /* const dispatch = useDispatch();
@@ -94,8 +95,8 @@ export const postVideogame = (payload) => {      ///payLoad hace referencia al c
 export const getVideogameDetail = (id) => {
     return async(dispatch) => {
         try {
-            const gameDetail = await axios.get(`http://localhost:3001/videogames/${id}`);
-            return dispatch({type: GET_DETAILS, payload: gameDetail.data})
+            const gameDetail2 = await axios.get(`http://localhost:3001/videogames/${id}`);
+            return dispatch({type: GET_DETAILS, payload: gameDetail2.data})
         } catch (e) {
             console.log(e)
         }
@@ -117,6 +118,21 @@ export const getByNameVideogame = (name) => {  // aca remplazamos payload por na
         }
     }
 }
+
+export const getAllPlatforms = () => {
+    return async (dispatch) => {
+      try {
+        let json = await axios.get("http://localhost:3001/platforms");
+        return dispatch({
+          type: GET_ALL_PLATFORMS,
+          payload: json.data,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  };
+
     //el payload se setea a un arreglo vacio
 export const clearVideogameDetail = (dispatch) => {
     return dispatch({
@@ -133,6 +149,12 @@ export const clearGenreDetail = (dispatch) => {
     });
 };
 
+export const cleanVideogames = (dispatch) => {
+    return dispatch({
+      type: CLEAN_VIDEOGAMES,
+      payload: [],
+    });
+  };
 
 export function filterGamesByGender(payload){
    // console.log(payload)
