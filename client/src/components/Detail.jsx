@@ -29,7 +29,7 @@ function Detail(props) {
       <div><p>{idVideogame.name}</p></div>
 
 
-        {/* <Cards                  
+         <Cards                  
                 id={idVideogame.id}           
                 name={idVideogame.name}
                 image={idVideogame.image}
@@ -37,7 +37,7 @@ function Detail(props) {
                 createdInDB={idVideogame.createdInDB}
                 rating={idVideogame.rating}
                 key={idVideogame.id}
-        /> */}
+        />
         
         {/* 
         {detailId?.map((e)=>{
