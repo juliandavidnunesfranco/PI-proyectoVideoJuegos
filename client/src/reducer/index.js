@@ -1,14 +1,14 @@
-import { GET_VIDEOGAMES,   // este reducer trae las accion con las que va a trabajar
-         GET_GENRES, 
-         GET_DETAILS, 
+import { GET_VIDEOGAMES,   // 1 este reducer trae las accion con las que va a trabajar
+         GET_GENRES,        //4    
+         GET_DETAILS,       //9
+         CLEAN_VIDEOGAMES, //2
          CLEAR_DETAIL,
-         CLEAN_VIDEOGAMES, 
-         FILTER_BY_GENDER, 
-         FILTER_BY_CREATED, 
-         ORDER_BY_NAME, 
-         GET_NAME_VIDEOGAME, 
-         POST_VIDEOGAME, //jkj
-         ORDER_BY_RATING,
+         FILTER_BY_GENDER,   //7
+         FILTER_BY_CREATED, //5
+         ORDER_BY_NAME,      //6
+         GET_NAME_VIDEOGAME, //3 
+         POST_VIDEOGAME, //  jkj
+         ORDER_BY_RATING, //8
          CLEAR_DETAIL_GENRE  } from "../actions";
 
 //----------->>>>ESTADO QUE SE VA A SETEAR CON LAS ACTIONS<<<<-------//         
@@ -29,7 +29,12 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
                 ...state,
                 videogames: payload,        //action.payload
                 allVideogames: payload      //action.payload 
-            }
+            };
+        case CLEAN_VIDEOGAMES:
+            return {
+                ...state,
+                videogames: payload,
+            };    
         case GET_GENRES:
             return {
                 ...state,
@@ -37,7 +42,8 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
             }
         case POST_VIDEOGAME:
             return {
-                ...state
+                ...state,
+                videogames: [...state.videogames, payload],
             }
         case GET_DETAILS:
             return {
@@ -52,7 +58,7 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
         case CLEAR_DETAIL:
             return {
                 ...state,
-                gameDetail: []
+                gameDetail:[]
 
             }
         case CLEAR_DETAIL_GENRE:
@@ -99,6 +105,7 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
                 ...state,
                 videogames: videogameCreated 
             }; 
+            
         case ORDER_BY_NAME:
             let stateVg = state.videogames;
             let sortedName =
@@ -120,7 +127,7 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
                     return -1;
                 }
                 return 0;
-            }) :
+            }) :             // payload !=='ratasc'
             state.videogames.sort(function(a, b){
                 if(a.rating > b.rating){
                     return -1;

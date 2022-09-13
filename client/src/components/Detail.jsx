@@ -1,45 +1,39 @@
 /* eslint-disable no-undef */
-import React from 'react';
+import React from "react";
 import { useDispatch, useSelector, useState } from "react-redux";
-import { clearVideogameDetail, getVideogameDetail }  from "../actions";
-import { useEffect } from 'react';
-import videogame from '../assets/videogame.png';
-import Cards from './Cards';
+import { clearVideogameDetail, getVideogameDetail } from "../actions";
+import { useEffect } from "react";
+import videogame from "../assets/videogame.png";
+import Cards from "./Cards";
 
 function Detail(props) {
+  const dispatch = useDispatch();
+  const { history, match } = props;
 
-    const dispatch = useDispatch();
-    const { history, match } = props;
-    
+  useEffect(() => {
+    dispatch(clearVideogameDetail(dispatch));
+    dispatch(getVideogameDetail(match.params.id));
+  }, [dispatch, match.params.id]);
 
-   useEffect(()=>{
-        dispatch(clearVideogameDetail(dispatch))
-        dispatch(getVideogameDetail(match.params.id));
-        
-    },[dispatch, match.params.id]);
-
-    const idVideogame = useSelector((state)=> state.gameDetail);  //gameDetail
-    //const id = match.params.id;
-    //const detail = idVideogame.filter((e)=> e !== null);
-    //const detailId = detail.filter((e)=> e.id.toString() === id.toString());
-    
+  const idVideogame = useSelector((state) => state.gameDetail); //gameDetail
 
   return (
     <div>
-      <div><p>{idVideogame.name}</p></div>
+      <div>
+        <p>{idVideogame.name}</p>
+      </div>
 
+      <Cards
+        id={idVideogame.id}
+        name={idVideogame.name}
+        image={idVideogame.image}
+        genres={idVideogame.genres}
+        createdInDB={idVideogame.createdInDB}
+        rating={idVideogame.rating}
+        key={idVideogame.id}
+      />
 
-        {/* <Cards                  
-                id={idVideogame.id}           
-                name={idVideogame.name}
-                image={idVideogame.image}
-                genres={idVideogame.genres}
-                createdInDB={idVideogame.createdInDB}
-                rating={idVideogame.rating}
-                key={idVideogame.id}
-        /> */}
-        
-        {/* 
+      {/* 
         {detailId?.map((e)=>{
         return(                        
             <Cards                  
@@ -53,12 +47,11 @@ function Detail(props) {
             />
         )
         })} */}
-    <div>
-    <button onClick={()=>history.goBack()}>Atras</button>    
+      <div>
+        <button onClick={() => history.goBack()}>Atras</button>
+      </div>
     </div>
-    </div>
-    
-  )
+  );
 }
 
 export default Detail;

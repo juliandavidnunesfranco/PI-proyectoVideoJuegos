@@ -207,7 +207,7 @@ router.get('/videogames/:id', async (req, res) => {
         if (id){
             let gameId = await returnVideoGame(id);
             Object.entries(gameId).length !== 0 
-            ? res.status(200).send(`The Videogame ${gameId.name} is matched!!`) 
+            ? res.status(200).send(gameId) 
             : res.status(404).send('Video Game not found')
         }
     }catch(error){
