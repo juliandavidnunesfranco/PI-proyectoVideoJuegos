@@ -12,7 +12,7 @@ export const GET_NAME_VIDEOGAME = 'GET_NAME_VIDEOGAME';
 export const POST_VIDEOGAME = 'POST_VIDEOGAME';
 export const ORDER_BY_RATING = 'ORDER_BY_RATING';
 export const CLEAR_DETAIL_GENRE = 'CLEAR_DETAIL_GENRE';
-
+export const CLEAN_VIDEOGAMES = 'CLEAN_VIDEOGAMES';
 //
 
 /* const dispatch = useDispatch();
@@ -77,29 +77,30 @@ export const postVideogame = (payload) => {      ///payLoad hace referencia al c
 
 //con el metodo .then para manejo de promesas
 //llamada al back-end cuando sea necesario traer por id en especial para ver los detalles del videogame
-export const getVideogameDetail = (id) => {
+/* export const getVideogameDetail = (id) => {
     return (dispatch) => {
       axios
         .get(`http://localhost:3001/videogames/${id}`) // se hace el llamadao
         .then((json) => json.data)                     //se especifica que necesitamos 
-        .then((json) => dispatch({                     // se despacha la info con el metodo dispatch
+        .then((data) => dispatch({                     // se despacha la info con el metodo dispatch
              type: GET_DETAILS,                        // se dice que la action que estamos despachando es una tipo GET_DETAILS
-             payload: json }))                         // que esta action va cargada con un payload que es el data del id que solicitamos
+             payload: data }))                         // que esta action va cargada con un payload que es el data del id que solicitamos
         .catch((error) => console.log(error));         // con este modelo no usamos try catch  solo .then(...) y .catch(...)
     };
-}; 
-//getDetail
+};  */
+
+
 //con el metodo async await para manejo de promesas
-/* export const getVideogameDetail = (id) => {
+export const getVideogameDetail = (id) => {
     return async(dispatch) => {
         try {
-            const gameDetail = await axios.get(`http://localhost:3001/videogame/${id}`);
+            const gameDetail = await axios.get(`http://localhost:3001/videogames/${id}`);
             return dispatch({type: GET_DETAILS, payload: gameDetail.data})
         } catch (e) {
             console.log(e)
         }
     }
-}; */
+}; 
 
 export const getByNameVideogame = (name) => {  // aca remplazamos payload por name    lo que quiere decir que vamos a estar cargando es el name
     return async function(dispatch){         // la function despacha un llamado al back-end con el name donde lo pone por query
@@ -120,8 +121,9 @@ export const getByNameVideogame = (name) => {  // aca remplazamos payload por na
 export const clearVideogameDetail = (dispatch) => {
     return dispatch({
         type: CLEAR_DETAIL,
-        payload: {},
+        payload: [],
     });
+
 };
 
 export const clearGenreDetail = (dispatch) => {

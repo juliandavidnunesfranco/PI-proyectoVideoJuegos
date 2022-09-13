@@ -48,7 +48,7 @@ const getVideogames = async () => {
 };
 
 const getDbInfo = async () => {
-    return await Videogame.findAll({  
+    return await Videogame.findAll({    //db
         include: [{
             model: Genre,
             as: 'genres',
@@ -120,7 +120,7 @@ const returnVideoGame = async (id) => {
 
 router.get('/videogames', async(req, res) => {
     const name = req.query.name;
-    
+    try{
     if (!name) {
         let gamesTotal = await getAllVideogames();
         res.status(200).send(gamesTotal);
@@ -133,7 +133,7 @@ router.get('/videogames', async(req, res) => {
                 image: el.background_image,
                 release: el.released,
                 rating: el.rating,
-                platforms: el.platforms.map(ch => ch.platform.name),
+                platforms: el.platforms.map(ch => ch.platforms),  //valor name ?
                 genres: el.genres.map(ch => ch.name),
                 createdInDB: el.createdInDB,
             }
@@ -160,6 +160,8 @@ router.get('/videogames', async(req, res) => {
         })
         let gameTotal = gameApi.concat(gameDb)
         res.status(200).send(gameTotal)
+    }}catch(error){
+        console.log(error)
     }
 })
 

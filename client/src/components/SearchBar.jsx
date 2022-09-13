@@ -24,8 +24,7 @@ const SearchBar = () => {
     }
     
     return (
-        <div className="search">
-            
+        <div className="search">            
             <input type="text" 
             placeholder="Buscar..."
             onChange={(e) => handleInputChange(e)}
@@ -33,17 +32,7 @@ const SearchBar = () => {
             <button className="btn" 
             type="submit" 
             onClick={(e) => handleSubmit(e)}
-            >Buscar</button>
-            {/* 
-            <Link to='/home'>
-                    <button>HOME</button>
-            </Link>
-             */}
-            {/* <Link to='/createVideogame'>
-                <button>Crear Videojuego</button>
-            </Link> */}
-
-            
+            >Buscar</button>            
         </div>
     )
 }

@@ -1,7 +1,8 @@
 import { GET_VIDEOGAMES,   // este reducer trae las accion con las que va a trabajar
          GET_GENRES, 
          GET_DETAILS, 
-         CLEAR_DETAIL, 
+         CLEAR_DETAIL,
+         CLEAN_VIDEOGAMES, 
          FILTER_BY_GENDER, 
          FILTER_BY_CREATED, 
          ORDER_BY_NAME, 
@@ -15,7 +16,7 @@ const initialState = {
       videogames : [],
       allVideogames: [],
       genres: [],
-      gameDetail: {}
+      gameDetail: []
 };
 
 
@@ -27,7 +28,7 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
             return {
                 ...state,
                 videogames: payload,        //action.payload
-                allVideogames: payload      //action.payload
+                allVideogames: payload      //action.payload 
             }
         case GET_GENRES:
             return {
@@ -51,7 +52,7 @@ function rootReducer (state = initialState, {type, payload}){       //tiene dos 
         case CLEAR_DETAIL:
             return {
                 ...state,
-                gameDetail: {}
+                gameDetail: []
 
             }
         case CLEAR_DETAIL_GENRE:

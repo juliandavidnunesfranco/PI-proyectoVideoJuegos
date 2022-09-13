@@ -9,7 +9,6 @@ import Cards from './Cards'
 import './Home.css'
 
 
-
 const Home = (props) => {
     const dispatch = useDispatch();
     const allVideogames = useSelector((state) => state.videogames);
@@ -43,11 +42,11 @@ const Home = (props) => {
 
 
     //------->>>>>>Cargo los videogames con useEffect
-        
-      /*   useEffect(() => {
+         
+         useEffect(() => {
             dispatch(getVideogames());
         }, [dispatch]);
-       */
+        
 
     //-------->>>>Handlers
 
@@ -59,7 +58,7 @@ const Home = (props) => {
 
     const handleGenres = (e)=>{
         e.preventDefault();
-        dispatch(clearVideogameDetail(dispatch));
+        /* dispatch(clearVideogameDetail(dispatch)); */
         dispatch(getGenres());
     }
 
