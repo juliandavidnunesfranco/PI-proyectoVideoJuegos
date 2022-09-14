@@ -1,13 +1,18 @@
-const { Router } = require('express')
-const { Op } = require('sequelize')
-const { Videogame, Genre, Platform, platforms_videogames } = require('../db.js')
-const { API_KEY } = process.env
-const axios = require('axios')
+const { Router } = require("express");
+const { Op } = require("sequelize");
+const {
+  Videogame,
+  Genre,
+  Platform,
+  platforms_videogames,
+} = require("../db.js");
+const { API_KEY } = process.env;
+const axios = require("axios");
 
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
 
-const router = Router()
+const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 
@@ -18,14 +23,14 @@ const router = Router()
 ////------>>> CONTROLLERS--primero el que trae todos los videogames
 
 const getVideogames = async () => {
-  let videoGames = []
+  let videoGames = [];
 
-  let page = 1
+  let page = 1;
 
   while (videoGames.length < 100) {
     let response = await axios.get(
-      `https://api.rawg.io/api/games?key=${API_KEY}&page=${page}`,
-    ) //  la variable response es la que trae todo
+      `https://api.rawg.io/api/games?key=${API_KEY}&page=${page}`
+    ); //  la variable response es la que trae todo
     response.data.results.map((el) => {
       // capturo la rspuesta xq es asincrono
       videoGames.push({
@@ -36,12 +41,12 @@ const getVideogames = async () => {
         rating: el.rating,
         platforms: el.platforms.map((ch) => ch.platform.name),
         genres: el.genres.map((ch) => ch.name),
-      })
-    })
-    page++
+      });
+    });
+    page++;
   }
-  return videoGames
-}
+  return videoGames;
+};
 
 const getDbInfo = async () => {
   return await Videogame.findAll({
@@ -49,21 +54,21 @@ const getDbInfo = async () => {
     include: [
       {
         model: Genre,
-        as: 'genres',
-        attributes: ['id', 'name'],
+        as: "genres",
+        attributes: ["id", "name"],
       },
       {
         model: Platform,
-        as: 'platforms_videogames',
-        attributes: ['id', 'name'],
+        as: "platforms_videogames",
+        attributes: ["id", "name"],
       },
     ],
-  })
-}
+  });
+};
 
 const getAllVideogames = async () => {
-  let apiInfo = await getVideogames() // apiInfo == getVideogames() ejecutado
-  let dbInfoP = await getDbInfo() // dbInfoP == getDbInfo() ejecutado   con p al final
+  let apiInfo = await getVideogames(); // apiInfo == getVideogames() ejecutado
+  let dbInfoP = await getDbInfo(); // dbInfoP == getDbInfo() ejecutado   con p al final
   let dbInfo = dbInfoP.map((el) => {
     //  dbInfo --->> se mapea adicionando mas features
     return {
@@ -76,19 +81,19 @@ const getAllVideogames = async () => {
       platforms: el.platforms.map((ch) => ch),
       genres: el.genres.map((ch) => ch.name),
       createdInDB: el.createdInDB || false,
-    }
-  })
-  let infoTotal = apiInfo.concat(dbInfo) //  se concatenan los vidogames del api con los de db interna
-  return infoTotal
-}
+    };
+  });
+  let infoTotal = apiInfo.concat(dbInfo); //  se concatenan los vidogames del api con los de db interna
+  return infoTotal;
+};
 
 const getVideogameById = async (id) => {
   // function que tiene como parametro un id
   if (id.length < 7) {
     let apiUrl = await axios.get(
-      `https://api.rawg.io/api/games/${id}?key=${API_KEY}`,
-    ) // segundo endpoint de la api externa
-    let apiInfo = await apiUrl.data
+      `https://api.rawg.io/api/games/${id}?key=${API_KEY}`
+    ); // segundo endpoint de la api externa
+    let apiInfo = await apiUrl.data;
     return {
       name: apiInfo.name,
       image: apiInfo.background_image,
@@ -97,10 +102,10 @@ const getVideogameById = async (id) => {
       rating: apiInfo.rating,
       platforms: apiInfo.platforms.map((ch) => ch.platform.name),
       genres: apiInfo.genres.map((ch) => ch.name),
-    }
+    };
   } else {
-    let gameID = await Videogame.findByPk(id, { include: Genre })
-    let aux = gameID.dataValues
+    let gameID = await Videogame.findByPk(id, { include: Genre });
+    let aux = gameID.dataValues;
     //console.log(aux)
     return {
       name: aux.name,
@@ -110,29 +115,29 @@ const getVideogameById = async (id) => {
       rating: aux.rating,
       platforms: aux.platforms.map((ch) => ch),
       genres: aux.genres.map((ch) => ch.name),
-    }
+    };
   }
-}
+};
 
 const returnVideoGame = async (id) => {
-  let game = await getVideogameById(id)
-  return game
-}
+  let game = await getVideogameById(id);
+  return game;
+};
 
 //------>>>>CARGAR 50 videogames a data base----<<<<///
 
 //------>>>//--ROUTES--//<<<------//
 
-router.get('/videogames', async (req, res) => {
-  const name = req.query.name
+router.get("/videogames", async (req, res) => {
+  const name = req.query.name;
   try {
     if (!name) {
-      let gamesTotal = await getAllVideogames()
-      res.status(200).send(gamesTotal)
+      let gamesTotal = await getAllVideogames();
+      res.status(200).send(gamesTotal);
     } else {
       let gamesFromApi = await axios.get(
-        `https://api.rawg.io/api/games?search=${name}&key=${API_KEY}`,
-      )
+        `https://api.rawg.io/api/games?search=${name}&key=${API_KEY}`
+      );
       let gameApi = gamesFromApi.data.results.map((el) => {
         return {
           id: el.id,
@@ -143,15 +148,15 @@ router.get('/videogames', async (req, res) => {
           platforms: el.platforms.map((ch) => ch.platforms), //valor name ?
           genres: el.genres.map((ch) => ch.name),
           createdInDB: el.createdInDB,
-        }
-      })
+        };
+      });
       let gamesFromDB = await Videogame.findAll({
         where: {
-          name: { [Op.iLike]: '%' + name + '%' },
+          name: { [Op.iLike]: "%" + name + "%" },
         },
         include: Genre,
-      })
-      console.log('games from bd --->> ' + gamesFromDB)
+      });
+      console.log("games from bd --->> " + gamesFromDB);
 
       let gameDb = gamesFromDB.map((el) => {
         return {
@@ -164,17 +169,17 @@ router.get('/videogames', async (req, res) => {
           platforms: el.platforms.map((ch) => ch),
           genres: el.genres.map((ch) => ch.name),
           createdInDB: el.createdInDB,
-        }
-      })
-      let gameTotal = gameApi.concat(gameDb)
-      res.status(200).send(gameTotal)
+        };
+      });
+      let gameTotal = gameApi.concat(gameDb);
+      res.status(200).send(gameTotal);
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
-router.post('/videogames', async (req, res) => {
+router.post("/videogames", async (req, res) => {
   try {
     let {
       name,
@@ -185,16 +190,16 @@ router.post('/videogames', async (req, res) => {
       platforms,
       genres,
       createdInDB,
-    } = req.body
+    } = req.body;
 
     if (name) {
       try {
-        const thevideogame = await getAllVideogames()
+        const thevideogame = await getAllVideogames();
         const anVideogame = thevideogame.find(
-          (e) => e.name.toLowerCase() === name.toLowerCase(),
-        )
+          (e) => e.name.toLowerCase() === name.toLowerCase()
+        );
         if (anVideogame) {
-          return res.send('the video game exist')
+          return res.send("the video game exist");
         }
 
         let gameCreated = await Videogame.create({
@@ -205,93 +210,94 @@ router.post('/videogames', async (req, res) => {
           rating,
           platforms,
           createdInDB,
-        })
-        let genreDb = await Genre.findAll({ where: { name: genres } })
-        let platformDb = await Platform.findAll({ where:{ name: platforms}}) ;
-        gameCreated.addGenre(genreDb), gameCreated.addPlatform(platformDb)
+        });
+        let genreDb = await Genre.findAll({ where: { name: genres } });
+        let platformDb = await Platform.findAll({ where: { name: platforms } });
+        gameCreated.addGenre(genreDb);
+        gameCreated.addPlatform(platformDb);
 
-        res.send('Videogame successfully created!')
+        res.send("Videogame successfully created!");
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
-    if (!name) return res.status(400).send('Videogame name is obligtory')
+    if (!name) return res.status(400).send("Videogame name is obligtory");
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
-router.get('/videogames/:id', async (req, res) => {
+router.get("/videogames/:id", async (req, res) => {
   try {
-    let id = req.params.id
+    let id = req.params.id;
     if (id) {
-      let gameId = await returnVideoGame(id)
+      let gameId = await returnVideoGame(id);
       Object.entries(gameId).length !== 0
         ? res.status(200).send(gameId)
-        : res.status(400).send('Video Game not found')
+        : res.status(400).send("Video Game not found");
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
-router.get('/genres', async (req, res) => {
+router.get("/genres", async (req, res) => {
   try {
     let generos = await axios.get(
-      `https://api.rawg.io/api/genres?key=${API_KEY}`,
-    )
+      `https://api.rawg.io/api/genres?key=${API_KEY}`
+    );
     let response = generos.data.results.map((el) => {
       return {
         name: el.name,
-      }
-    })
+      };
+    });
 
     response.forEach(async (e) => {
       await Genre.findOrCreate({
         where: {
           name: e.name,
         },
-      })
-    })
+      });
+    });
 
-    let allGenres = await Genre.findAll()
-    return res.json(allGenres)
+    let allGenres = await Genre.findAll();
+    return res.json(allGenres);
   } catch (error) {
-    console.error(error)
-    res.send(error)
+    console.error(error);
+    res.send(error);
   }
-})
+});
 
-router.post('/genres', async (req, res) => {
+router.post("/genres", async (req, res) => {
   try {
-    let { name } = req.body
-    let newGenre = await Genre.create({ name: name })
+    let { name } = req.body;
+    let newGenre = await Genre.create({ name: name });
     //console.log(newGenre)
-    res.status(200).send(newGenre)
-    console.log('Genre successfully created!')
+    res.status(200).send(newGenre);
+    console.log("Genre successfully created!");
   } catch (error) {
-    res.send(error)
+    res.send(error);
   }
-})
+});
 
-router.get('/platforms', async (req, res) => {
+router.get("/platforms", async (req, res) => {
   try {
     const platformApi = await axios.get(
-      `https://api.rawg.io/api/platforms?key=${API_KEY}`,
-    )
-    const platforms = platformApi.data.results.map((e) => e.name)
-    const id = platformApi.data.results.map((e) => e.id)
+      `https://api.rawg.io/api/platforms?key=${API_KEY}`
+    );
+    const platforms = platformApi.data.results.map((e) => e.name);
+    const id = platformApi.data.results.map((e) => e.id);
 
     platforms.forEach((e, i) => {
       Platform.findOrCreate({
         where: { name: e, id: id[i] },
-      })
-    })
-    const allPlatforms = await Platform.findAll()
-    res.send(allPlatforms)
+      });
+    });
+    const allPlatforms = await Platform.findAll();
+    res.send(allPlatforms);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
-module.exports = router
+module.exports = router;

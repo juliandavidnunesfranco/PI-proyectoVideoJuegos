@@ -263,6 +263,7 @@ const CreateVideogame = () => {
             }}
           >
             <option>Select Platform</option>
+            {console.log(platforms)}
             {platforms?.map((e) => {
               return (
                 <option key={e.id} value={e.name}>
