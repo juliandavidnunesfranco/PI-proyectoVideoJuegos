@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  background-color: yellow;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+.button-detail-atras {
+  width: 160px;
+  height: 40px;
+  position: relative;
+  margin-top: 30px;
+  margin-left: 130px;
+  border-radius: 10px;
+  background-color: yellow;
+  color: black;
+  text-decoration: none;
+}
+.button-detail-atras:hover {
+  background-color: black;
+  color: white;
+  text-decoration: none;
+}
+
+.imagen {
+  width: 40px;
+  height: 100px;
+  padding: 20px;
+}

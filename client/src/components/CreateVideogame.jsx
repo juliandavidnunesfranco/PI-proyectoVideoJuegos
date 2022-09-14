@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import "./CreateVideogame.css";
 
 //------>>>>>Actions
 import {
@@ -12,21 +13,24 @@ import {
 
 const CreateVideogame = () => {
   ///------------>>>>>>>>Estados y sus Set
-  const [errors, setErrors] = useState({});
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllPlatforms());
+    dispatch(getGenres());
+  }, [dispatch]);
 
   ///----->>>>>>>seleccionar el estado genres con useSelector
   const genres = useSelector((state) => state.genres);
   const platforms = useSelector((state) => state.platforms);
-
+  const [errors, setErrors] = useState({});
   const history = useHistory(); //////--------->>>>>Props de DOM
 
   const [input, setInput] = useState({
     ///--------->>>>Estado de los input
     name: "",
     description: "",
-    released: "",
+    release: "",
     rating: "",
     genres: [],
     platforms: [],
@@ -43,46 +47,48 @@ const CreateVideogame = () => {
 
   const validate = (input) => {
     ///------>>>>>>  a los componentes inputs se les evalua con los regex
-    let errors = {};
+    let errors = {}; //--->>>es un objeto
     if (
-      !noEmpty.test(input.name) || ///------>>>> si esta vacio  o
-      !validateName.test(input.name) || ///----->>>no cumple name o
+      !noEmpty || ///------>>>> si esta vacio  o
+      !validateName || ///----->>>no cumple name o
       input.name.length < 5 ///------>>>>name tiene una longitud menor que 5 caracteres
     ) {
       ///----->>>>>>entonces
       errors.name = "Name required. more than 5 characters"; ///------>>>>el objeto error (estado) tendra el name "..."
     }
-    if (!validateNum.test(input.rating) || parseInt(input.rating) < 1) {
+    if (!validateNum || parseInt(input.rating) < 1) {
       ///------>>>>>>Valida que si no cumple con numeros entre 1-5 o son menores que 1 entonces
       errors.rating = "Number required. Higher than 1"; ///------->>>>>el objeto errors con su rating sera "..."
     }
-    if (!validateDate.test(input.release) || parseInt(input.release) < 1) {
+    if (!validateDate || parseInt(input.release) < 1) {
       ///------>>>>>>si no cumple con el date primero 4 luego 2 y luego 2 digitos entonces
-      errors.release = "Released required. YYYY/MM/DD"; ///---->>>>> el estado error (objeto) con su value release sera "..."
+      errors.release = "release required. YYYY/MM/DD"; ///---->>>>> el estado error (objeto) con su value release sera "..."
     }
     if (
-      !validateWords.test(input.description) || ///----->>>>>sino cumple con un rango de palabras
+      !validateWords || ///----->>>>>sino cumple con un rango de palabras
       parseInt(input.description) < 1 ///------>>>> o el rango de palabras es menor a 1  o sea 0
     ) {
       //------->>>>>entonces
       errors.description = /// ---->>>>> objeto error con su value description sera "..."
         "Description required. Higher than 5 characters and less than 200 ";
     }
-    if (!validateUrl) {         ///----->>>>>.test(input.img)
+    if (!validateUrl) {
+      ///----->>>>>.test(input.img)
       errors.img = "URL required";
     }
-    return errors;    ////------->>>>>>>aca devolvemos el error de acuerdo a lo que suceda
+    return errors; ////------->>>>>>>aca devolvemos el error de acuerdo a lo que suceda
   };
 
   const handleChange = (e) => {
-    setInput({        ///seteamos el input name con el value de target 
+    setInput({
+      ///seteamos el input ... con el valor que vamos digitando
       ...input,
       [e.target.name]: e.target.value,
     });
     setErrors(
       validate({
         ...input,
-        [e.target.name]: e.target.value,  ///---->>>>> al error tambien se le carga el value
+        [e.target.name]: e.target.value, ///---->>>>> al error tambien se le carga el value = e.target.value
       })
     );
   };
@@ -113,11 +119,10 @@ const CreateVideogame = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (
       !errors.name &&
       !errors.rating &&
-      !errors.released &&
+      !errors.release &&
       !errors.description &&
       !errors.img
     ) {
@@ -125,7 +130,7 @@ const CreateVideogame = () => {
       setInput({
         name: "",
         rating: "",
-        released: "",
+        release: "",
         description: "",
         genres: [],
         platforms: [],
@@ -146,29 +151,23 @@ const CreateVideogame = () => {
     });
   };
 
-  useEffect(() => {
-    dispatch(getGenres());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(getAllPlatforms());
-  }, [dispatch]);
-
   return (
     <div>
-      <Link to="/home">
-        <button>Go Back</button>
-      </Link>
+      <button className="button-atras" onClick={() => history.goBack()}>
+        Atras
+      </button>
       <form
+        className="container-form"
         onSubmit={(e) => {
           handleSubmit(e);
         }}
       >
-        <h2>Create Videogame</h2>
-
+        <div className="title">
+          <h2>Create Videogame</h2>
+        </div>
         <div>
-          <div>
-            <label>Name:</label>
+          <div className="container-inputs">
+            <label>Name: </label>
             <input
               type="text"
               value={input.name}
@@ -190,44 +189,42 @@ const CreateVideogame = () => {
               placeholder="Rating 1-5"
             />
             <p>{errors.rating}</p>
-            <label>Released:</label>
+            <label>Release: </label>
             <input
               type="text"
-              value={input.released}
-              name="released"
+              value={input.release}
+              name="release"
               onChange={(e) => {
                 handleChange(e);
               }}
               placeholder="YYYY/MM/DD"
             />
-            <p>{errors.released}</p>
+            <p>{errors.release}</p>
           </div>
-
-          <div>
-            <label>Image: </label>
-            <input
-              type="text"
-              value={input.img}
-              name="img"
-              onChange={(e) => {
-                handleChange(e);
-              }}
-              placeholder="URL Image..."
-            />
-            <p>{errors.img}</p>
-
-            <label>Description:</label>
-            <textarea
-              type="text"
-              value={input.description}
-              name="description"
-              onChange={(e) => {
-                handleChange(e);
-              }}
-              placeholder="Description"
-            />
-            <p>{errors.description}</p>
-          </div>
+        </div>
+        <div className="container-seconds-inputs">
+          <label>Image: </label>
+          <input
+            type="text"
+            value={input.img}
+            name="img"
+            onChange={(e) => {
+              handleChange(e);
+            }}
+            placeholder="URL Image..."
+          />
+          <p>{errors.img}</p>
+          <label>Description: </label>
+          <textarea
+            type="text"
+            value={input.description}
+            name="description"
+            onChange={(e) => {
+              handleChange(e);
+            }}
+            placeholder="Description"
+          />
+          <p>{errors.description}</p>
         </div>
         <div>
           <select
@@ -288,10 +285,20 @@ const CreateVideogame = () => {
               </div>
             );
           })}
+          <button
+            className="button-create"
+            type="submit"
+            disabled={
+              !input.name ||
+              !input.rating ||
+              !input.release ||
+              !input.description ||
+              !input.genres
+            }
+          >
+            Create!
+          </button>
         </div>
-        <button type="submit" disabled={!input.name}>
-          Create!
-        </button>
       </form>
     </div>
   );

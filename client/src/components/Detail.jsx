@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearVideogameDetail, getVideogameDetail } from "../actions";
 import { useEffect } from "react";
-import style from './Detail.module.css'
+import  './Detail.css'
 function Detail(props) {
   const dispatch = useDispatch();
   const { history, match } = props;
@@ -16,8 +16,8 @@ function Detail(props) {
 
   return (
     <React.Fragment>
-      <div className={style.container}>
-        <button onClick={() => history.back()}>Go Back</button>
+      <div className="container">
+        <button className='button-detail-atras' onClick={() => history.back()}>Go Back</button>
 
         <div className="detail">
           <img className="imagen" src={idVideogame.image} alt="img not found" />

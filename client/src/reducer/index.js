@@ -11,6 +11,8 @@ import {
   POST_VIDEOGAME, //  jkj
   ORDER_BY_RATING, //8
   CLEAR_DETAIL_GENRE,
+  GET_ALL_PLATFORMS
+
 } from '../actions'
 
 //----------->>>>ESTADO QUE SE VA A SETEAR CON LAS ACTIONS<<<<-------//
@@ -19,6 +21,7 @@ const initialState = {
   allVideogames: [],
   genres: [],
   gameDetail: [],
+  platforms: [],
 }
 
 //---->>>>REDUCER<<<<------//
@@ -128,6 +131,11 @@ function rootReducer(state = initialState, { type, payload }) {
         ...state,
         videogames: sortedName,
       }
+    case GET_ALL_PLATFORMS:
+      return{
+        ...state,
+        platforms: payload,
+      }  
 
     case ORDER_BY_RATING:
       let sortedGames1 =
