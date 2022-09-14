@@ -1,11 +1,8 @@
-/* eslint-disable no-undef */
 import React from "react";
-import { useDispatch, useSelector, useState } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearVideogameDetail, getVideogameDetail } from "../actions";
 import { useEffect } from "react";
-import videogame from "../assets/videogame.png";
-import Cards from "./Cards";
-
+import style from './Detail.module.css'
 function Detail(props) {
   const dispatch = useDispatch();
   const { history, match } = props;
@@ -18,39 +15,20 @@ function Detail(props) {
   const idVideogame = useSelector((state) => state.gameDetail); //gameDetail
 
   return (
-    <div>
-      <div>
-        <p>{idVideogame.name}</p>
-      </div>
+    <React.Fragment>
+      <div className={style.container}>
+        <button onClick={() => history.back()}>Go Back</button>
 
-      <Cards
-        id={idVideogame.id}
-        name={idVideogame.name}
-        image={idVideogame.image}
-        genres={idVideogame.genres}
-        createdInDB={idVideogame.createdInDB}
-        rating={idVideogame.rating}
-        key={idVideogame.id}
-      />
-
-      {/* 
-        {detailId?.map((e)=>{
-        return(                        
-            <Cards                  
-                id={e.id}           
-                name={e.name}
-                image={e.image}
-                genres={e.genres}
-                createdInDB={e.createdInDB}
-                rating={e.rating}
-                key={e.id}
-            />
-        )
-        })} */}
-      <div>
-        <button onClick={() => history.goBack()}>Atras</button>
+        <div className="detail">
+          <img className="imagen" src={idVideogame.image} alt="img not found" />
+          <p>{idVideogame.platforms}</p>
+          <p>{idVideogame.genres}</p>
+          <p>{idVideogame.release}</p>
+          <h2>{idVideogame.name}</h2>
+          <div>{idVideogame.rating}</div>
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 

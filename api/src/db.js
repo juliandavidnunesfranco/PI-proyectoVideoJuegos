@@ -33,7 +33,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Videogame, Genre } = sequelize.models;
+const { Videogame, Genre, Platform } = sequelize.models;
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);     muchos a muchos
@@ -41,7 +41,8 @@ const { Videogame, Genre } = sequelize.models;
 Videogame.belongsToMany(Genre, {through: "videogame_genre"});
 Genre.belongsToMany(Videogame, {through: "videogame_genre"});
 
-
+Videogame.belongsToMany(Platform, {	through: 'videogame_platform',	as: 'platforms_videogames'});
+Platform.belongsToMany(Videogame, { through: 'videogame_platform',});
 ////  axios --> se usa para cargar los genres a DB  ////
 /* let urlGenre =`https://api.rawg.io/api/genres?key=${API_KEY}`
 

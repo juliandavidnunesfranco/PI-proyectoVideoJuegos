@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+//------>>>>>Actions
 import {
   getGenres,
   postVideogame,
   cleanVideogames,
   getAllPlatforms,
 } from "../actions";
-import { useDispatch, useSelector } from "react-redux";
 
+const CreateVideogame = () => {
+  ///------------>>>>>>>>Estados y sus Set
+  const [errors, setErrors] = useState({});
 
-const VideogameCreate = () => {
   const dispatch = useDispatch();
+
+  ///----->>>>>>>seleccionar el estado genres con useSelector
   const genres = useSelector((state) => state.genres);
   const platforms = useSelector((state) => state.platforms);
-  const [errors, setErrors] = useState({});
-  const history = useHistory();
+
+  const history = useHistory(); //////--------->>>>>Props de DOM
 
   const [input, setInput] = useState({
+    ///--------->>>>Estado de los input
     name: "",
     description: "",
     released: "",
@@ -25,52 +32,57 @@ const VideogameCreate = () => {
     platforms: [],
     img: "",
   });
-               ///////// regex /////// expresiones regulares
-  let noEmpty = /\S+/;
-  let validateName = /^.{5,200}$/;
-  let validateNum = /^[1-5]+([.][1-5]+)?$/;
-  let validateUrl = /(https?:\/\/.*\.(?:png|jpg))/i;
-  let validateDate = /^\d{4}\/\d{2}\/\d{2}$/;
-  let validateWords = /^.{5,100}$/;
+  ///////// regex /////// expresiones regulares
+
+  let noEmpty = /\S+/; //---------->>>>>>> los caracteres que no son espacios en blanco.
+  let validateName = /^.{5,200}$/; ///------------->>>>>>>> los caracteres estes en el rango de 5 a 200
+  let validateNum = /^[1-5]+([.][1-5]+)?$/; //------>>>>>>>Validar que este en el rango de enteros entre 1-5 o flotantes de  1-5
+  let validateUrl = /(https?:\/\/.*\.(?:png|jpg))/i; ////----------->>>>>>que inicie por https y termine en . png o jpg
+  let validateDate = /^\d{4}\/\d{2}\/\d{2}$/; //------>>>>validar que el date tenga el orden de 4 caracteres luego dos y luego dos
+  let validateWords = /^.{5,100}$/; ///------->>>>>validar que este en el rango entre 5 - 100
 
   const validate = (input) => {
+    ///------>>>>>>  a los componentes inputs se les evalua con los regex
     let errors = {};
     if (
-      !noEmpty.test(input.name) ||
-      !validateName.test(input.name) ||
-      input.name.length < 5
+      !noEmpty.test(input.name) || ///------>>>> si esta vacio  o
+      !validateName.test(input.name) || ///----->>>no cumple name o
+      input.name.length < 5 ///------>>>>name tiene una longitud menor que 5 caracteres
     ) {
-      errors.name = "Name required. more than 5 characters";
+      ///----->>>>>>entonces
+      errors.name = "Name required. more than 5 characters"; ///------>>>>el objeto error (estado) tendra el name "..."
     }
     if (!validateNum.test(input.rating) || parseInt(input.rating) < 1) {
-      errors.rating = "Number required. Higher than 1";
+      ///------>>>>>>Valida que si no cumple con numeros entre 1-5 o son menores que 1 entonces
+      errors.rating = "Number required. Higher than 1"; ///------->>>>>el objeto errors con su rating sera "..."
     }
-    if (!validateDate.test(input.released) || parseInt(input.released) < 1) {
-      errors.released = "Released required. YYYY/MM/DD";
+    if (!validateDate.test(input.release) || parseInt(input.release) < 1) {
+      ///------>>>>>>si no cumple con el date primero 4 luego 2 y luego 2 digitos entonces
+      errors.release = "Released required. YYYY/MM/DD"; ///---->>>>> el estado error (objeto) con su value release sera "..."
     }
     if (
-      !validateWords.test(input.description) ||
-      parseInt(input.description) < 1
+      !validateWords.test(input.description) || ///----->>>>>sino cumple con un rango de palabras
+      parseInt(input.description) < 1 ///------>>>> o el rango de palabras es menor a 1  o sea 0
     ) {
-      errors.description =
+      //------->>>>>entonces
+      errors.description = /// ---->>>>> objeto error con su value description sera "..."
         "Description required. Higher than 5 characters and less than 200 ";
     }
-
-    if (!validateUrl.test(input.img)) {
+    if (!validateUrl) {         ///----->>>>>.test(input.img)
       errors.img = "URL required";
     }
-    return errors;
+    return errors;    ////------->>>>>>>aca devolvemos el error de acuerdo a lo que suceda
   };
 
   const handleChange = (e) => {
-    setInput({
+    setInput({        ///seteamos el input name con el value de target 
       ...input,
       [e.target.name]: e.target.value,
     });
     setErrors(
       validate({
         ...input,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value,  ///---->>>>> al error tambien se le carga el value
       })
     );
   };
@@ -87,7 +99,7 @@ const VideogameCreate = () => {
     }
   };
 
-  const handleSelect1 = (e) => {
+  const handleSelectOne = (e) => {
     if (input.platforms.length < 2) {
       setInput({
         ...input,
@@ -148,7 +160,7 @@ const VideogameCreate = () => {
         <button>Go Back</button>
       </Link>
       <form
-          onSubmit={(e) => {
+        onSubmit={(e) => {
           handleSubmit(e);
         }}
       >
@@ -158,7 +170,6 @@ const VideogameCreate = () => {
           <div>
             <label>Name:</label>
             <input
-              
               type="text"
               value={input.name}
               name="name"
@@ -181,7 +192,6 @@ const VideogameCreate = () => {
             <p>{errors.rating}</p>
             <label>Released:</label>
             <input
-              
               type="text"
               value={input.released}
               name="released"
@@ -196,7 +206,6 @@ const VideogameCreate = () => {
           <div>
             <label>Image: </label>
             <input
-              
               type="text"
               value={input.img}
               name="img"
@@ -222,7 +231,7 @@ const VideogameCreate = () => {
         </div>
         <div>
           <select
-              onChange={(e) => {
+            onChange={(e) => {
               handleSelect(e);
             }}
           >
@@ -240,7 +249,6 @@ const VideogameCreate = () => {
               <div key={e}>
                 <p>{e}</p>
                 <button
-                  
                   onClick={() => {
                     handleDelete(e);
                   }}
@@ -253,9 +261,8 @@ const VideogameCreate = () => {
         </div>
         <div>
           <select
-            
             onChange={(e) => {
-              handleSelect1(e);
+              handleSelectOne(e);
             }}
           >
             <option>Select Platform</option>
@@ -272,7 +279,6 @@ const VideogameCreate = () => {
               <div key={e}>
                 <p>{e}</p>
                 <button
-                  
                   onClick={() => {
                     handleDelete(e);
                   }}
@@ -283,11 +289,7 @@ const VideogameCreate = () => {
             );
           })}
         </div>
-        <button
-          
-          type="submit"
-          disabled={!input.name}
-        >
+        <button type="submit" disabled={!input.name}>
           Create!
         </button>
       </form>
@@ -295,4 +297,4 @@ const VideogameCreate = () => {
   );
 };
 
-export default VideogameCreate;
+export default CreateVideogame;

@@ -154,10 +154,10 @@ const Home = (props) => {
             <SearchBar />               
         </div>
         <button className='button-createv'
-                onClick={()=> history.push('/create')}
+                onClick={()=> history.push('/create')}      //viene del dom propiedad como location, match y history
                 >Crear videogame
         </button>
-                {currentVideoItems?.map((e) => {        //si el paginado cargo algo entonces
+                {currentVideoItems?.map((e) => {     //si el paginado cargo algo entonces
                     return(                         //retorne un componente que tiene como propiedades
                         <Cards                  //lo siguiente id, name, image ...
                             id={e.id}           //pero aun no lo rederiza solo esta capturando estas props del dom

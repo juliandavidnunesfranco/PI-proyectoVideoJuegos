@@ -15,7 +15,7 @@ function App() {
             <Route exact path="/" component={LandingPage}/>
             <Route path="/home" component={Home}/>
             <Route path="/create" component={CreateVideogame}/>
-            <Route path="/videogames/:id" component={Detail}/>
+            <Route exact path="/videogames/:id" component={Detail}/>
 
           </React.Fragment>           
       </BrowserRouter>

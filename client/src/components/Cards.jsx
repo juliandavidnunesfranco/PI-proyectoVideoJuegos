@@ -5,7 +5,7 @@ import {getVideogameDetail} from '../actions'
 import './Cards.css';
 
 const Cards = ({id, name, image, genres, createdInDB, rating}) => {
-  console.log(id);
+  //console.log(id);
 
   return (
     <div className='Card  center'>

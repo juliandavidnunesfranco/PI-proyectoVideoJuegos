@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { Op } = require('sequelize');
-const { Videogame, Genre, videogame_genre } = require("../db.js");
+const { Videogame, Genre, Platform } = require("../db.js");
 const { API_KEY } = process.env;
 const axios = require('axios');
 
@@ -208,7 +208,7 @@ router.get('/videogames/:id', async (req, res) => {
             let gameId = await returnVideoGame(id);
             Object.entries(gameId).length !== 0 
             ? res.status(200).send(gameId) 
-            : res.status(404).send('Video Game not found')
+            : res.status(400).send('Video Game not found')
         }
     }catch(error){
         console.log(error);
@@ -256,6 +256,28 @@ router.post('/genres', async (req, res) => {
     } catch (error) {
         res.send(error)
     }
-})
+});
+
+router.get('/platfomrs', async(req, res) => {
+    try{    
+        const platformApi = await axios.get(`https://api.rawg.io/api/platforms/lists/parents?key=${API_KEY}`);
+        const platfomrs = platformApi.data.results.map( e => e.name);
+        const id = platformApi.data.results.map( e => e.id);
+
+        platfomrs.forEach((e, i) => {
+            Platform.findOrCreate({
+                where: {name: e,
+                        id: id[i]        
+                },
+            });
+        });
+        const allPlatforms = await Platform.findAll()
+        res.send(allPlatforms)
+    }catch(error){
+        console.log(error)
+    }
+
+});
+
 
 module.exports = router;

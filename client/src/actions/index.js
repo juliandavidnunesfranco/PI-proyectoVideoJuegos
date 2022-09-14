@@ -61,20 +61,20 @@ export const getGenres = () => {
 
 
 //cuando se ejecute esta action se usa el metodo post en la ruta del back-end
-
 export const postVideogame = (payload) => {      ///payLoad hace referencia al cuerpo que se esta cargando
-    return async () => {                         ///en este caso es un videogame
-      try {
-        var createVideogame = await axios.post("http://localhost:3001/videogames", payload);
-        alert("New videogame is created!");    // muestra una ventana con este mensaje
-        return createVideogame;
-      } catch (error) {
-        alert("Videogame name already exist");
-        console.log(error);
-      }
-    };
+  return async (dispatch) => {                         ///en este caso es un videogame
+    try {
+      var createVideogame = await axios.post("http://localhost:3001/videogames", payload);
+      return  dispatch({
+            type: POST_VIDEOGAME,
+            payload: createVideogame.data
+      });              
+    } catch (error) {
+      alert("Videogame name already exist");
+      console.log(error);
+    }
+  };
 };
-
 
 //con el metodo .then para manejo de promesas
 //llamada al back-end cuando sea necesario traer por id en especial para ver los detalles del videogame
@@ -95,8 +95,8 @@ export const postVideogame = (payload) => {      ///payLoad hace referencia al c
 export const getVideogameDetail = (id) => {
     return async(dispatch) => {
         try {
-            const gameDetail2 = await axios.get(`http://localhost:3001/videogames/${id}`);
-            return dispatch({type: GET_DETAILS, payload: gameDetail2.data})
+            const gameDetail = await axios.get(`http://localhost:3001/videogames/${id}`);
+            return dispatch({type: GET_DETAILS, payload: gameDetail.data})
         } catch (e) {
             console.log(e)
         }
@@ -127,11 +127,11 @@ export const getAllPlatforms = () => {
           type: GET_ALL_PLATFORMS,
           payload: json.data,
         });
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       }
     };
-  };
+};
 
     //el payload se setea a un arreglo vacio
 export const clearVideogameDetail = (dispatch) => {
