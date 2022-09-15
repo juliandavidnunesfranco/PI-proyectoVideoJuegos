@@ -257,17 +257,12 @@ const CreateVideogame = () => {
           })}
         </div>
         <div>
-          <select
-            onChange={(e) => {
-              handleSelectOne(e);
-            }}
-          >
-            <option>Select Platform</option>
-            {console.log(platforms)}
-            {platforms?.map((e) => {
-              return (
-                <option key={e.id} value={e.name}>
-                  {e.name}
+          <select onChange={(e) => {handleSelectOne(e)}}>
+              <option>Select Platform</option>
+              {platforms?.map((e) => {
+                  return (
+                    <option key={e.id} value={e.name}>
+                      {e.name}
                 </option>
               );
             })}

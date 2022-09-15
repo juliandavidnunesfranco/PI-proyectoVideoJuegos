@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearVideogameDetail, getVideogameDetail } from "../actions";
 import { useEffect } from "react";
-import  './Detail.css'
+import "./Detail.css";
 function Detail(props) {
   const dispatch = useDispatch();
   const { history, match } = props;
@@ -16,16 +16,41 @@ function Detail(props) {
 
   return (
     <React.Fragment>
+      <div className="btn-atras">
+        <button
+          className="button-detail-atras"
+          onClick={() => history.push("/home")}
+        >
+          Atras
+        </button>
+      </div>
+
       <div className="container">
-        <button className='button-detail-atras' onClick={() => history.back()}>Go Back</button>
+        <img
+          className="imagen-detail"
+          src={idVideogame.image}
+          alt="img not found"
+        />
+        <div className="title-central-down">
+          <h2>{idVideogame.name}</h2>
+        </div>
+        <div className="rating">
+          <h2>Rating: </h2>
+          <p>{idVideogame.rating}</p>
+        </div>
 
         <div className="detail">
-          <img className="imagen" src={idVideogame.image} alt="img not found" />
-          <p>{idVideogame.platforms}</p>
+          <h2>Generos: </h2>
           <p>{idVideogame.genres}</p>
+        </div>
+
+        <div className="release">
+          <h2>Released: </h2>
           <p>{idVideogame.release}</p>
-          <h2>{idVideogame.name}</h2>
-          <div>{idVideogame.rating}</div>
+        </div>
+        <div className="platforms">
+          <h2>Platforms: </h2>
+          <p>{idVideogame.platforms}</p>
         </div>
       </div>
     </React.Fragment>
