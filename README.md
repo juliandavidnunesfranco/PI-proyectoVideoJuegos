@@ -10,25 +10,31 @@
 - Aprender y practicar el workflow de GIT.
 - Usar y practicar testing.
 
-
 __TECNOLOGIA:__ 
-- __Node__: 12.18.3 o mayor
-- __Sequelize__: 
+
+- __Node__: 16.0.2
+- __axios__: 0.27.2
+- __body-parser__: 1.19.0
+- __cookie-parser__: 1.4.5
+- __cors__: 2.8.5
+- __dotenv__: 8.2.0
+- __express__: 4.17.1
+- __morgan__: 1.10.0
+- __pg__: 8.5.1
+- __sequelize__: 6.3.5
+- __uuid__: 8.3.2
 - __react__: 17.0.1
 - __react-dom__: 17.0.1
 - __react-router-dom__: 5.2.0
 - __redux__: 4.0.5
 - __react-redux__: 7.2.3
 
-Está permitido, __bajo su responsabilidad__, actualizar las dependencias a versiones más actuales.
-
-> __IMPORTANTE:__ Versiones mas actuales podrían presentar configuraciones diferentes respecto a las versiones en las que venimos trabajando durante el bootcamp.
 
 ## BoilerPlate
 
 El boilerplate cuenta con dos carpetas: `api` y `client`. En estas carpetas estará el código del back-end y el front-end respectivamente.
 
-En `api` crear un archivo llamado: `.env` que tenga la siguiente forma:
+En `api` se crear un archivo llamado: `.env` que tenga la siguiente forma:
 
 ```env
 DB_USER=usuariodepostgres
